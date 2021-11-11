@@ -32,12 +32,7 @@ spring:
           slow-sql-millis: 2000
       primary: master #设置默认的数据源或者数据源组,默认值即为master
       strict: false #设置严格模式,默认false不启动. 启动后在未匹配到指定数据源时候回抛出异常,不启动会使用默认数据源.
-      datasource:
-        master:
-          url: jdbc:mysql://8.140.109.163:3306/helan?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&useAffectedRows=true
-          username: root
-          password: helan!985211
-          driver-class-name: com.mysql.jdbc.Driver
+
 mybatis-plus:
   mapper-locations: classpath*:com/origin/server/mapper/**/xml/*Mapper.xml
   global-config:
