@@ -19,7 +19,7 @@ public class UserOperationReq {
     /**
      * 用户id
      */
-    @Null(groups = ValidGroup.Crud.Create.class)
+    @Null(groups = ValidGroup.Crud.Create.class,message = "用户id必须为空")
     @NotNull(groups = {ValidGroup.Crud.Update.class,ValidGroup.Crud.Delete.class},message = "用户id不为空")
     private Integer id;
 

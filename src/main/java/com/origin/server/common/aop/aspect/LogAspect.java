@@ -35,10 +35,10 @@ public class LogAspect {
      * 第三个*号：表示方法名，*号表示所有的方法
      * 后面括弧里面表示方法的参数，两个句点表示任何参数
      */
-    @Pointcut("@annotation(com.origin.server.common.annotation.AutoLog)")
+    @Pointcut("execution(* com.origin.server.controller..*.*(..))")
     public void logPointcut(){}
 
-    @Around("logPointcut()")
+    @Around(value = "logPointcut()")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         log.info("============ start ============");
         long beginTime = System.currentTimeMillis();
@@ -46,27 +46,20 @@ public class LogAspect {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
 
-        AutoLog autoLog = method.getAnnotation(AutoLog.class);
-
         Object result;
-        if (autoLog != null){
-            ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-            HttpServletRequest request = requestAttributes.getRequest();
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = requestAttributes.getRequest();
 
-            log.info("HTTP URL : " + request.getRequestURL().toString());
-            log.info("HTTP METHOD : " + request.getMethod());
-            log.info("CLASS METHOD : " + joinPoint.getSignature().getDeclaringTypeName() + "."
-                    + joinPoint.getSignature().getName());
-            log.info("PARAMS : " + getRequestParams(request, joinPoint));
+        log.info("HTTP URL : " + request.getRequestURL().toString());
+        log.info("HTTP METHOD : " + request.getMethod());
+        log.info("CLASS METHOD : " + joinPoint.getSignature().getDeclaringTypeName() + "."
+                + joinPoint.getSignature().getName());
+        log.info("PARAMS : " + getRequestParams(request, joinPoint));
 
-            //执行方法
-            result = joinPoint.proceed();
-            log.info("The response parameter is：{}", JSON.toJSONString(result));
-            log.info("execution time：{}ms", System.currentTimeMillis() - beginTime);
-        }else {
-            //直接执行方法
-            result = joinPoint.proceed();
-        }
+        //执行方法
+        result = joinPoint.proceed();
+        log.info("The response parameter is：{}", JSON.toJSONString(result));
+        log.info("execution time：{}ms", System.currentTimeMillis() - beginTime);
         log.info("============= end =============");
         return result;
     }
